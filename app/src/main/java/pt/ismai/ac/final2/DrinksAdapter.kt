@@ -30,6 +30,11 @@ class DrinksAdapter(private val drinks: List<Drink>) : RecyclerView.Adapter<Drin
         val textView: TextView = itemView.findViewById(R.id.text_view)
     }
 
+    // Lista de itens a mostrar no recyclerView
+    private var items = drinks
+    // Lista de itens a utilizar para pesquisa
+    private var searchResults = mutableListOf<Drink>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_drinks, parent, false)
 
@@ -48,10 +53,10 @@ class DrinksAdapter(private val drinks: List<Drink>) : RecyclerView.Adapter<Drin
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val drink = drinks[position]
+        val drink = items[position]
         holder.textView.text = drink.strDrink
 
-        // Click Listener
+        // Listener
         holder.itemView.setOnClickListener {
             clickListener.onDrinkClick(drink)
         }
@@ -68,6 +73,25 @@ class DrinksAdapter(private val drinks: List<Drink>) : RecyclerView.Adapter<Drin
     }
 
     override fun getItemCount(): Int {
-        return drinks.size
+        return items.size
+    }
+    // Metodo para filtragem
+    fun filter(query: String) {
+        // Limpar lista de resultados
+        searchResults.clear()
+
+        // Mostrar tudo se query voltar vazia
+        if (query.isEmpty()) {
+            items = drinks
+        } else {
+            // Mostrar pesquisa
+            drinks.forEach {
+                if (it.strDrink.contains(query, ignoreCase = true)) {
+                    searchResults.add(it)
+                }
+            }
+            items = searchResults
+        }
+        notifyDataSetChanged()
     }
 }

@@ -12,8 +12,18 @@
             android:id="@+id/titulo1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Complete Drinks List"
-            android:textSize="32sp" />
+            android:gravity="center"
+            android:background="@color/purple_700"
+            android:textColor="@color/white"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="Every Drink"
+            android:textSize="48sp" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchEvery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <androidx.recyclerview.widget.RecyclerView
            android:id="@+id/recyclerNonAlcoholicDrinks"

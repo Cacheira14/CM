@@ -6,15 +6,21 @@
 
     <ImageView
         android:id="@+id/image_view"
-        android:layout_width="30dp"
-        android:layout_height="36dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
         />
 
     <TextView
         android:id="@+id/text_view"
         android:layout_width="wrap_content"
-        android:layout_height="36dp"
-        android:textSize="24sp"
+        android:layout_height="50dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginStart="2dp"
+        android:textSize="40sp"
+        android:textColor="@color/white"
         />
 
 </LinearLayout>

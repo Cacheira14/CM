@@ -3,6 +3,7 @@ package pt.ismai.ac.final2
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,9 +43,10 @@ class MainActivity : AppCompatActivity() {
     // ---------------------------------------------------------------------------------------------
 
     lateinit var recyclerDrinks: RecyclerView
+    lateinit var searchEvery: SearchView
+    private lateinit var adapter: DrinksAdapter
 
     private lateinit var binding: ActivityMainBinding
-    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.binding = ActivityMainBinding.inflate(layoutInflater)
@@ -80,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                 // Por fazer
             }
             runOnUiThread { // Correr na thread que criou a UI
-                val adapter = DrinksAdapter(drinkList.sortedBy { it.strDrink })
+                adapter = DrinksAdapter(drinkList.sortedBy { it.strDrink })
                 adapter.setOnDrinkClickListener(object : DrinksAdapter.OnDrinkClickListener {
                     override fun onDrinkClick(drink: Drink) {
                         // Guardar nome da bebida e começar nova activity
@@ -95,6 +97,22 @@ class MainActivity : AppCompatActivity() {
             }
         }).start()
 
+        // ----------------------------------- Componente de procura -----------------------------------
+        searchEvery = binding.searchEvery
+        val searchEvery = findViewById<SearchView>(R.id.searchEvery)
+        searchEvery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // Call the filter method in the adapter when the user submits a query
+                adapter.filter(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                // You can also update the adapter's data as the user types in the SearchView
+                adapter.filter(newText)
+                return true
+            }
+        })
     }
 }
