@@ -39,6 +39,7 @@ class DrinkDetailsActivity : AppCompatActivity() {
         // Ir buscar valor importado da main activity
         val drinkName = intent.getStringExtra("drink_name")
         drink_name_text_view.text = drinkName
+        supportActionBar?.setTitle(drinkName) // Definir bebida como titulo da pagina
 
         val client = OkHttpClient()
         val gson = Gson()
