@@ -36,18 +36,21 @@ class DrinkDetailsActivity : AppCompatActivity() {
         drink_ingredient1_text_view = binding.drinkSpecificIngredient1TextView
         drink_thumb_image_view = binding.drinkSpecificThumbImageView
 
-        // Ir buscar valor importado da main activity
-        val drinkName = intent.getStringExtra("drink_name")
-        drink_name_text_view.text = drinkName
-        supportActionBar?.setTitle(drinkName) // Definir bebida como titulo da pagina
-
         val client = OkHttpClient()
         val gson = Gson()
 
-        val request = Request.Builder()
-            .url("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=$drinkName")
-            .build()
-
+        // Ir buscar valor importado da main activity
+        val drinkName = intent.getStringExtra("drink_name")
+        val request: Request
+        if (drinkName == "random"){
+            request = Request.Builder()
+                .url("https://www.thecocktaildb.com/api/json/v1/1/random.php\n")
+                .build()
+        }else {
+            request = Request.Builder()
+                .url("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=$drinkName")
+                .build()
+        }
         var drink: DrinkDetails? = null // Assegurar que drink é utilizavel fora do try{}
         Thread(Runnable {
             try {
@@ -59,11 +62,29 @@ class DrinkDetailsActivity : AppCompatActivity() {
                 // Por fazer
             }
             runOnUiThread {
+                supportActionBar?.setTitle(drink!!.strDrink) // Definir bebida como titulo da pagina
                 drink_name_text_view.text = drink!!.strDrink
                 drink_category_text_view.text = drink!!.strCategory
                 drink_glass_text_view.text = drink!!.strGlass
                 drink_instructions_text_view.text = drink!!.strInstructions
-                drink_ingredient1_text_view.text = drink!!.strIngredient1
+                // Lista de Ingredientes
+                var ingredientsList: String = ""
+                for (i in 1..15) {
+                    val fieldName = "strIngredient$i"
+                    val field = drink!!::class.java.getDeclaredField(fieldName)
+                    field.isAccessible = true
+                    val ingredient = field.get(drink) as? String
+
+                    if(i == 1) {
+                        ingredientsList += ingredient
+                    } else if(ingredient == "" || ingredient == null){
+                        break
+                    } else {
+                        ingredientsList += (", $ingredient")
+                    }
+                }
+
+                drink_ingredient1_text_view.text = ingredientsList
                 Glide.with(this) // Glide para carregar imagem com base no URL
                     .load(drink!!.strDrinkThumb)
                     .into(drink_thumb_image_view)

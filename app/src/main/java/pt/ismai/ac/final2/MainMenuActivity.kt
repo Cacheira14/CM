@@ -12,10 +12,6 @@ import pt.ismai.ac.final2.databinding.ActivityMainMenuBinding
 
 class MainMenuActivity : AppCompatActivity() {
     // ------------------------------------------ Funções ------------------------------------------
-    private fun executeAnotherActivity(AnotherActivity: Class<*>) {
-        val x = Intent(this, AnotherActivity)
-        startActivity(x)
-    }
     // ---------------------------------------------------------------------------------------------
 
     private lateinit var binding: ActivityMainMenuBinding
@@ -41,10 +37,13 @@ class MainMenuActivity : AppCompatActivity() {
 
         // Chamada de outras activities
         btnBrowse.setOnClickListener {
-            executeAnotherActivity(MainActivity::class.java)
+            val intent = Intent(this@MainMenuActivity, MainActivity::class.java)
+            startActivity(intent)
         }
         btnRandom.setOnClickListener {
-            executeAnotherActivity(DrinkDetailsActivity::class.java) // POR IMPLEMENTAR
+            val intent = Intent(this@MainMenuActivity, DrinkDetailsActivity::class.java) //Preparar chamada de activity
+            intent.putExtra("drink_name", "random") // Enviar String extra (Se string for "random", pesquisa bebida aleatoriamente)
+            startActivity(intent) //Start
         }
     }
 }
