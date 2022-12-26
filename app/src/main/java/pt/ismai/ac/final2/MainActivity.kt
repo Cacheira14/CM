@@ -2,12 +2,17 @@ package pt.ismai.ac.final2
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -43,8 +48,8 @@ class MainActivity : AppCompatActivity() {
     // ---------------------------------------------------------------------------------------------
 
     lateinit var recyclerDrinks: RecyclerView
-    lateinit var searchEvery: SearchView
     private lateinit var adapter: DrinksAdapter
+    private lateinit var loading2: ImageView
 
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,10 +58,24 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        // Inicio Gradiente
+        val gradient = GradientDrawable(
+            GradientDrawable.Orientation.TOP_BOTTOM,
+            intArrayOf(Color.parseColor("#6200ee"), Color.parseColor("#000000"))
+        )
+        val rootView: View = findViewById(android.R.id.content)
+        rootView.background = gradient
+        // Fim Gradiente
+
+        //Atribuições
         recyclerDrinks = binding.recyclerNonAlcoholicDrinks
         recyclerDrinks.layoutManager = LinearLayoutManager(this)
+        loading2 = binding.loading2
 
-        //teste
+        //Atribuir imagem a loading
+        Glide.with(this) // Glide para carregar imagem com base no URL
+            .load("https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif")
+            .into(loading2)
 
 
         val client = OkHttpClient()
@@ -94,22 +113,24 @@ class MainActivity : AppCompatActivity() {
                 })
                 recyclerDrinks.adapter = adapter
                 adapter.notifyDataSetChanged()
+                // Desativar loading e ativar Recycler
+                loading2.visibility = View.GONE
+                recyclerDrinks.visibility = View.VISIBLE
             }
         }).start()
 
         // ----------------------------------- Componente de procura -----------------------------------
-        searchEvery = binding.searchEvery
         val searchEvery = findViewById<SearchView>(R.id.searchEvery)
         searchEvery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextSubmit(query: String): Boolean {
-                // Call the filter method in the adapter when the user submits a query
+                // Chamar filter quando é efetuada uma query
                 adapter.filter(query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                // You can also update the adapter's data as the user types in the SearchView
+                // Chamar filter quando é efetuada uma query (Onchange)
                 adapter.filter(newText)
                 return true
             }

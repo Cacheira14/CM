@@ -1,9 +1,13 @@
 package pt.ismai.ac.final2
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -14,12 +18,13 @@ import pt.ismai.ac.final2.databinding.ActivityDrinkDetailsBinding
 import java.io.IOException
 
 class DrinkDetailsActivity : AppCompatActivity() {
-    lateinit var drink_name_text_view: TextView
     lateinit var drink_category_text_view: TextView
     lateinit var drink_glass_text_view: TextView
     lateinit var drink_instructions_text_view: TextView
     lateinit var drink_ingredient1_text_view: TextView
     lateinit var drink_thumb_image_view: ImageView
+    private lateinit var loading1: ImageView
+    private lateinit var mainLayout1: LinearLayout
 
     private lateinit var binding: ActivityDrinkDetailsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,12 +34,27 @@ class DrinkDetailsActivity : AppCompatActivity() {
         setContentView(view)
 
         //Inicialização de vars
-        drink_name_text_view = binding.drinkSpecificNameTextView
         drink_category_text_view = binding.drinkSpecificCategoryTextView
         drink_glass_text_view = binding.drinkSpecificGlassTextView
         drink_instructions_text_view = binding.drinkSpecificInstructionsTextView
         drink_ingredient1_text_view = binding.drinkSpecificIngredient1TextView
         drink_thumb_image_view = binding.drinkSpecificThumbImageView
+        loading1 = binding.loading1
+        mainLayout1 = binding.mainLayout1
+
+        //Atribuir imagem a loading
+        Glide.with(this) // Glide para carregar imagem com base no URL
+            .load("https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif")
+            .into(loading1)
+
+        // Inicio Gradiente
+        val gradient = GradientDrawable(
+            GradientDrawable.Orientation.TOP_BOTTOM,
+            intArrayOf(Color.parseColor("#6200ee"), Color.parseColor("#000000"))
+        )
+        val rootView: View = findViewById(android.R.id.content)
+        rootView.background = gradient
+        // Fim Gradiente
 
         val client = OkHttpClient()
         val gson = Gson()
@@ -63,7 +83,6 @@ class DrinkDetailsActivity : AppCompatActivity() {
             }
             runOnUiThread {
                 supportActionBar?.setTitle(drink!!.strDrink) // Definir bebida como titulo da pagina
-                drink_name_text_view.text = drink!!.strDrink
                 drink_category_text_view.text = drink!!.strCategory
                 drink_glass_text_view.text = drink!!.strGlass
                 drink_instructions_text_view.text = drink!!.strInstructions
@@ -83,11 +102,14 @@ class DrinkDetailsActivity : AppCompatActivity() {
                         ingredientsList += (", $ingredient")
                     }
                 }
-
                 drink_ingredient1_text_view.text = ingredientsList
                 Glide.with(this) // Glide para carregar imagem com base no URL
                     .load(drink!!.strDrinkThumb)
                     .into(drink_thumb_image_view)
+
+                // Desativar Loading e ativar Layout Principal
+                loading1.visibility = View.GONE
+                mainLayout1.visibility = View.VISIBLE
             }
         }).start()
     }
