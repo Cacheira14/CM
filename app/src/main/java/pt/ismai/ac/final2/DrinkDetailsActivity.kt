@@ -5,6 +5,9 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -25,6 +28,7 @@ class DrinkDetailsActivity : AppCompatActivity() {
     lateinit var drink_thumb_image_view: ImageView
     private lateinit var loading1: ImageView
     private lateinit var mainLayout1: LinearLayout
+    private var drinkID: Int = 0
 
     private lateinit var binding: ActivityDrinkDetailsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +54,7 @@ class DrinkDetailsActivity : AppCompatActivity() {
         // Inicio Gradiente
         val gradient = GradientDrawable(
             GradientDrawable.Orientation.TOP_BOTTOM,
-            intArrayOf(Color.parseColor("#6200ee"), Color.parseColor("#000000"))
+            intArrayOf(Color.parseColor("#6200ee"), Color.parseColor("#13012C"))
         )
         val rootView: View = findViewById(android.R.id.content)
         rootView.background = gradient
@@ -82,6 +86,7 @@ class DrinkDetailsActivity : AppCompatActivity() {
                 // Por fazer
             }
             runOnUiThread {
+                drinkID = drink!!.idDrink
                 supportActionBar?.setTitle(drink!!.strDrink) // Definir bebida como titulo da pagina
                 drink_category_text_view.text = drink!!.strCategory
                 drink_glass_text_view.text = drink!!.strGlass
@@ -112,5 +117,23 @@ class DrinkDetailsActivity : AppCompatActivity() {
                 mainLayout1.visibility = View.VISIBLE
             }
         }).start()
+    }
+    // Botão favoritos
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.favorite, menu)
+        return true
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.favorite_button -> {
+                val favoriteDrinksDbHelper = FavoriteDrinksDbHelper(this)
+                favoriteDrinksDbHelper.addDrink(drinkID)
+                //favoriteDrinksDbHelper.removeDrink(1)
+                //val ids = favoriteDrinksDbHelper.getAllIDs()
+                Log.d("teste", drinkID.toString())
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 }

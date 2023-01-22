@@ -17,6 +17,7 @@ class MainMenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainMenuBinding
     lateinit var btnBrowse: Button
     lateinit var btnRandom: Button
+    lateinit var btnFavorites: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.binding = ActivityMainMenuBinding.inflate(layoutInflater)
@@ -25,11 +26,12 @@ class MainMenuActivity : AppCompatActivity() {
         // Atribuições
         btnBrowse = binding.menuBrowse
         btnRandom = binding.menuRandom
+        btnFavorites = binding.menuFavorites
 
         // Inicio Gradiente
         val gradient = GradientDrawable(
             GradientDrawable.Orientation.TOP_BOTTOM,
-            intArrayOf(Color.parseColor("#6200ee"), Color.parseColor("#000000"))
+            intArrayOf(Color.parseColor("#6200ee"), Color.parseColor("#13012C"))
         )
         val rootView: View = findViewById(android.R.id.content)
         rootView.background = gradient
@@ -44,6 +46,10 @@ class MainMenuActivity : AppCompatActivity() {
             val intent = Intent(this@MainMenuActivity, DrinkDetailsActivity::class.java) //Preparar chamada de activity
             intent.putExtra("drink_name", "random") // Enviar String extra (Se string for "random", pesquisa bebida aleatoriamente)
             startActivity(intent) //Start
+        }
+        btnFavorites.setOnClickListener {
+            val intent = Intent(this@MainMenuActivity, FavoriteDrinksActivity::class.java)
+            startActivity(intent)
         }
     }
 }
