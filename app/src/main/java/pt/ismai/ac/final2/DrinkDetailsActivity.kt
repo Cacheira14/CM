@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
@@ -19,6 +20,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import pt.ismai.ac.final2.databinding.ActivityDrinkDetailsBinding
 import java.io.IOException
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 
 class DrinkDetailsActivity : AppCompatActivity() {
     lateinit var drink_category_text_view: TextView
@@ -83,7 +86,18 @@ class DrinkDetailsActivity : AppCompatActivity() {
                 val drinkResponse = gson.fromJson(responseBody, DrinkDetailsResponse::class.java)
                 drink = drinkResponse.drinks[0]
             } catch (e: IOException) {
-                // Por fazer
+                MotionToast.darkColorToast(
+                    this,
+                    "API Down.",
+                    "Please try again later",
+                    MotionToastStyle.ERROR,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.LONG_DURATION,
+                    ResourcesCompat.getFont(
+                        this,
+                        www.sanju.motiontoast.R.font.helvetica_regular
+                    )
+                )
             }
             runOnUiThread {
                 drinkID = drink!!.idDrink
@@ -127,7 +141,37 @@ class DrinkDetailsActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.favorite_button -> {
                 val favoriteDrinksDbHelper = FavoriteDrinksDbHelper(this)
-                favoriteDrinksDbHelper.addDrink(drinkID)
+
+                val ids = favoriteDrinksDbHelper.getAllIDs()
+                var flag = false
+                for (id in ids){
+                    if (id == drinkID){
+                        flag = true
+                    }
+                }
+                if (flag == false){
+                    MotionToast.darkColorToast(
+                        this,
+                        "Added to Favorites",
+                        "You've added this drink to your Favorites",
+                        MotionToastStyle.SUCCESS,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.SHORT_DURATION,
+                        ResourcesCompat.getFont(this, www.sanju.motiontoast.R.font.helvetica_regular)
+                    )
+                    favoriteDrinksDbHelper.addDrink(drinkID)
+                } else {
+                    MotionToast.darkColorToast(
+                        this,
+                        "Removed from Favorites",
+                        "You've removed this drink from your Favorites",
+                        MotionToastStyle.INFO,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.SHORT_DURATION,
+                        ResourcesCompat.getFont(this, www.sanju.motiontoast.R.font.helvetica_regular)
+                    )
+                    favoriteDrinksDbHelper.removeDrink(drinkID)
+                }
                 //favoriteDrinksDbHelper.removeDrink(1)
                 //val ids = favoriteDrinksDbHelper.getAllIDs()
                 Log.d("teste", drinkID.toString())

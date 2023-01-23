@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "393136669786",
+    "project_id": "mycocktailbdauth",
+    "storage_bucket": "mycocktailbdauth.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:393136669786:android:0b4430a11eb4bb0aa70463",
+        "android_client_info": {
+          "package_name": "pt.ismai.ac.final2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "393136669786-4uttbt47nso4htgol8ve136a81155rsk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsYKtkTsg99rbrKRGfl4zUZ8z4djSY7zA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "393136669786-4uttbt47nso4htgol8ve136a81155rsk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

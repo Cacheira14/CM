@@ -9,6 +9,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,6 +17,8 @@ import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import pt.ismai.ac.final2.databinding.ActivityMainBinding
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 import java.io.IOException
 
 
@@ -97,7 +100,18 @@ class MainActivity : AppCompatActivity() {
 
                 drinkList = itThroughCats(drinksCategoriesResponse) // Itera pelas categorias e obtem todas as bebidas
             } catch (e: IOException) {
-                // Por fazer
+                MotionToast.darkColorToast(
+                    this,
+                    "API Down.",
+                    "Please try again later",
+                    MotionToastStyle.ERROR,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.LONG_DURATION,
+                    ResourcesCompat.getFont(
+                        this,
+                        www.sanju.motiontoast.R.font.helvetica_regular
+                    )
+                )
             }
             runOnUiThread { // Correr na thread que criou a UI
                 adapter = DrinksAdapter(drinkList.sortedBy { it.strDrink })

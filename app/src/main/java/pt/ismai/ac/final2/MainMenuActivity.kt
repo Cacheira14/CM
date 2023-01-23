@@ -7,7 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import androidx.core.content.res.ResourcesCompat
 import pt.ismai.ac.final2.databinding.ActivityMainMenuBinding
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 
 
 class MainMenuActivity : AppCompatActivity() {
@@ -36,6 +39,20 @@ class MainMenuActivity : AppCompatActivity() {
         val rootView: View = findViewById(android.R.id.content)
         rootView.background = gradient
         // Fim Gradiente
+
+        // Mensagem Login
+        val success = intent.getStringExtra("success")
+        if (success != null) {
+            MotionToast.darkColorToast(
+                this,
+                "Successful Login!",
+                "You've Logged In Successfully.",
+                MotionToastStyle.SUCCESS,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(this, www.sanju.motiontoast.R.font.helvetica_regular)
+            )
+        }
 
         // Chamada de outras activities
         btnBrowse.setOnClickListener {

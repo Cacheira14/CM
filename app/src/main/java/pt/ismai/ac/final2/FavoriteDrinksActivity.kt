@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -14,6 +15,8 @@ import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import pt.ismai.ac.final2.databinding.ActivityFavoriteDrinksBinding
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 import java.io.IOException
 
 class FavoriteDrinksActivity : AppCompatActivity() {
@@ -55,7 +58,6 @@ class FavoriteDrinksActivity : AppCompatActivity() {
     private lateinit var recyclerDrinks: RecyclerView
     private lateinit var adapter: FavoriteDrinksAdapter
     private lateinit var loading2: ImageView
-
     private lateinit var binding: ActivityFavoriteDrinksBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,20 +78,35 @@ class FavoriteDrinksActivity : AppCompatActivity() {
         recyclerDrinks = binding.recyclerDrinks
         recyclerDrinks.layoutManager = LinearLayoutManager(this)
         loading2 = binding.loading2
-        val favoriteDrinksDbHelper = FavoriteDrinksDbHelper(this)
+    }
 
+    // Recurso ao onResume() é necessário a fim de forçar atualização quando o utilizador voltar de uma bebida de novo para esta Activity
+    override fun onResume() {
+        super.onResume()
         //Atribuir imagem a loading
         Glide.with(this) // Glide para carregar imagem com base no URL
             .load("https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif")
             .into(loading2)
 
         var drinkList: List<Drink> = emptyList()
+        val favoriteDrinksDbHelper = FavoriteDrinksDbHelper(this)
         Thread(Runnable {
             try {
                 val ids = favoriteDrinksDbHelper.getAllIDs()
                 drinkList = itThroughIDs(ids) // Itera pelos IDs fornecidos
             } catch (e: IOException) {
-                // Por fazer
+                MotionToast.darkColorToast(
+                    this,
+                    "API Down.",
+                    "Please try again later",
+                    MotionToastStyle.ERROR,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.LONG_DURATION,
+                    ResourcesCompat.getFont(
+                        this,
+                        www.sanju.motiontoast.R.font.helvetica_regular
+                    )
+                )
             }
             runOnUiThread { // Correr na thread que criou a UI
                 adapter = FavoriteDrinksAdapter(drinkList.sortedBy { it.strDrink })
@@ -109,6 +126,5 @@ class FavoriteDrinksActivity : AppCompatActivity() {
                 recyclerDrinks.visibility = View.VISIBLE
             }
         }).start()
-
     }
 }
